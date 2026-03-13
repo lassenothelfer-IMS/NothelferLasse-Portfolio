@@ -1,0 +1,57 @@
+.aboutWindow {
+  padding: 1rem;
+  font-family: 'Chicago', sans-serif;
+  line-height: 1.6;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
+}
+
+.systemInfo {
+  border: 2px solid #000;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #f0f0f0;
+}
+
+.systemInfo h3 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.5rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.infoItem {
+  display: flex;
+}
+
+.infoLabel {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.personalInfo {
+  margin-top: 1rem;
+}
+

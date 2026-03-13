@@ -1,0 +1,75 @@
+.projectsWindow {
+  padding: 1rem;
+  font-family: 'Chicago', sans-serif;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 2px solid #000;
+  background-color: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.cardIcon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.cardTitle {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.cardDescription {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.cardTags {
+  margin-bottom: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.cardLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border: 2px solid #000;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.link:hover {
+  background-color: #fff;
+  color: #000;
+}
+

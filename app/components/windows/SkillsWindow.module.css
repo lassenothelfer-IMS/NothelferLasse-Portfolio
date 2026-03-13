@@ -1,0 +1,42 @@
+.skillsWindow {
+  padding: 1rem;
+  font-family: 'Chicago', sans-serif;
+}
+
+.skillList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skillItem {
+  margin-bottom: 1rem;
+}
+
+.skillName {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.skillBar {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border: 1px solid #000;
+  overflow: hidden;
+}
+
+.skillLevel {
+  height: 100%;
+  animation: fillBar 1.5s ease-out forwards;
+}
+
+@keyframes fillBar {
+  from {
+    width: 0;
+  }
+  to {
+    /* The width is set via inline styles */
+  }
+}
+

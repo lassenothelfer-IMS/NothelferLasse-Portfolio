@@ -1,0 +1,49 @@
+// Single source of truth for every desktop icon → window mapping.
+export const WINDOW_CONFIGS = [
+  {
+    id:              "about",
+    title:           "About.txt",
+    icon:            "👤",
+    label:           "About",
+    defaultPosition: { x: 80,  y: 55  },
+    defaultSize:     { width: 740, height: 480 },
+    colorBar:        false,
+  },
+  {
+    id:              "projects",
+    title:           "Projects/",
+    icon:            "📁",
+    label:           "Projects",
+    defaultPosition: { x: 150, y: 80  },
+    defaultSize:     { width: 780, height: 560 },
+    colorBar:        false,
+  },
+  {
+    id:              "skills",
+    title:           "Skills.dat",
+    icon:            "⚙️",
+    label:           "Skills",
+    defaultPosition: { x: 200, y: 70  },
+    defaultSize:     { width: 720, height: 520 },
+    colorBar:        false,
+  },
+  {
+    id:              "cv",
+    title:           "CV.doc",
+    icon:            "📄",
+    label:           "CV",
+    defaultPosition: { x: 260, y: 90  },
+    defaultSize:     { width: 660, height: 540 },
+    colorBar:        false,
+  },
+  {
+    id:              "contact",
+    title:           "Contact.form",
+    icon:            "✉️",
+    label:           "Contact",
+    defaultPosition: { x: 310, y: 85  },
+    defaultSize:     { width: 580, height: 520 },
+    colorBar:        true,
+  },
+];
+

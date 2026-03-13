@@ -1,0 +1,43 @@
+export const projects = [
+  {
+    id:     "webshop",
+    title:  "SchulWebshop.app",
+    desc:   "Vollständiger E-Commerce-Prototyp mit Produktverwaltung, Warenkorb und Checkout-Simulation. Schulprojekt mit Java-Backend und MySQL-Datenbank.",
+    tags:   ["Java", "MySQL", "HTML", "CSS"],
+    color:  "#ff79c6",
+    icon:   "🛒",
+    github: "https://github.com/lassenothelfer",
+    demo:   "#",
+  },
+  {
+    id:     "librarydb",
+    title:  "LibraryDB.sql",
+    desc:   "Bibliotheksverwaltungssystem mit komplexem Datenbankschema, Stored Procedures und einem Web-Frontend zur Datenverwaltung.",
+    tags:   ["MySQL", "PHP", "HTML", "CSS"],
+    color:  "#50fa7b",
+    icon:   "📚",
+    github: "https://github.com/lassenothelfer",
+    demo:   "#",
+  },
+  {
+    id:     "dataanalyzer",
+    title:  "DataAnalyzer.py",
+    desc:   "Python-Skript zur automatisierten Analyse und Visualisierung von Schülerdaten aus CSV-Dateien mit pandas und matplotlib.",
+    tags:   ["Python", "pandas", "matplotlib"],
+    color:  "#ffb86c",
+    icon:   "📊",
+    github: "https://github.com/lassenothelfer",
+    demo:   "#",
+  },
+  {
+    id:     "portfolio",
+    title:  "Portfolio.jsx",
+    desc:   "Dieses Portfolio! Retro Mac OS 9 inspiriertes Desktop-Interface, gebaut mit Next.js, React und purem CSS. Voll interaktiv.",
+    tags:   ["Next.js", "React", "CSS"],
+    color:  "#8be9fd",
+    icon:   "💾",
+    github: "https://github.com/lassenothelfer/portfolio",
+    demo:   "#",
+  },
+];
+
