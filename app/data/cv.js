@@ -15,7 +15,7 @@ export const cv = [
     year: "2020 - 2023",
     title: "Secondary School",
     institution: "Sekundarschule Im Birch, Zurich",
-    description: "Sekundarschule Niveau A abgeschlossen .",
+    description: "Secondary school niveau A.",
   },
 ];
 
