@@ -52,6 +52,7 @@ export default function ContactWindow() {
             type="text"
             id="name"
             name="name"
+            placeholder="Your Name"
             value={formData.name}
             onChange={handleChange}
             className={styles.input}
@@ -64,6 +65,7 @@ export default function ContactWindow() {
             type="email"
             id="email"
             name="email"
+            placeholder="your.email@example.com"
             value={formData.email}
             onChange={handleChange}
             className={styles.input}
@@ -75,6 +77,7 @@ export default function ContactWindow() {
           <textarea
             id="message"
             name="message"
+            placeholder="How can I help you?"
             value={formData.message}
             onChange={handleChange}
             className={styles.textarea}
@@ -88,4 +91,3 @@ export default function ContactWindow() {
     </div>
   );
 }
-
