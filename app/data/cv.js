@@ -8,14 +8,14 @@ export const cv = [
   {
     year: "2024 - 2025",
     title: "Exchange year USA",
-    institution: "Belvidere North Highschool",
+    institution: "Belvidere North Highschool, Illinois USA",
     description: "Highschool year in the U.S living with a host family.",
   },
   {
-    year: "2016 - 2020",
+    year: "2020 - 2023",
     title: "Secondary School",
-    institution: "Markgraf-Diepold Grammar School, Waldsassen",
-    description: "Completed lower secondary education with a focus on natural sciences.",
+    institution: "Sekundarschule Im Birch, Zurich",
+    description: "Sekundarschule Niveau A abgeschlossen .",
   },
 ];
 
