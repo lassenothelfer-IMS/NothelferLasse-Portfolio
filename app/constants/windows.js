@@ -45,5 +45,13 @@ export const WINDOW_CONFIGS = [
     defaultSize:     { width: 580, height: 520 },
     colorBar:        true,
   },
+  {
+    id:              "settings",
+    title:           "Settings.exe",
+    icon:            "🖥️",
+    label:           "Settings",
+    defaultPosition: { x: 360, y: 100 },
+    defaultSize:     { width: 400, height: 300 },
+    colorBar:        false,
+  },
 ];
-

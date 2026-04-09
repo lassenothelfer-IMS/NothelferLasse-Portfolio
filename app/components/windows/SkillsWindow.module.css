@@ -13,9 +13,19 @@
   margin-bottom: 1rem;
 }
 
+.skillHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.5rem;
+}
+
 .skillName {
   font-weight: bold;
-  margin-bottom: 0.5rem;
+}
+
+.skillPercent {
+  font-weight: bold;
 }
 
 .skillBar {
@@ -28,15 +38,4 @@
 
 .skillLevel {
   height: 100%;
-  animation: fillBar 1.5s ease-out forwards;
 }
-
-@keyframes fillBar {
-  from {
-    width: 0;
-  }
-  to {
-    /* The width is set via inline styles */
-  }
-}
-

@@ -1,11 +1,15 @@
 import { projects } from '../../data/projects';
 import styles from './ProjectsWindow.module.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ProjectsWindow() {
+  const { language } = useLanguage();
+  const currentProjects = projects[language] || projects.en;
+
   return (
     <div className={styles.projectsWindow}>
       <div className={styles.grid}>
-        {projects.map(project => (
+        {currentProjects.map(project => (
           <div key={project.id} className={styles.card}>
             <div className={styles.cardHeader}>
               <span className={styles.cardIcon}>{project.icon}</span>
@@ -23,9 +27,6 @@ export default function ProjectsWindow() {
               <a href={project.github} target="_blank" rel="noopener noreferrer" className={styles.link}>
                 GitHub
               </a>
-              <a href={project.demo} target="_blank" rel="noopener noreferrer" className={styles.link}>
-                Demo
-              </a>
             </div>
           </div>
         ))}
@@ -33,4 +34,3 @@ export default function ProjectsWindow() {
     </div>
   );
 }
-

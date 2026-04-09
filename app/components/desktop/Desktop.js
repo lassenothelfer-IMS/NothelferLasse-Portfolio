@@ -14,6 +14,8 @@ import ProjectsWindow from "../windows/ProjectsWindow";
 import SkillsWindow   from "../windows/SkillsWindow";
 import CVWindow       from "../windows/CVWindow";
 import ContactWindow  from "../windows/ContactWindow";
+import SettingsWindow from "../windows/SettingsWindow";
+import { useLanguage } from "../../context/LanguageContext";
 
 import styles from "./Desktop.module.css";
 
@@ -25,6 +27,18 @@ const CONTENT_MAP = {
     skills:   SkillsWindow,
     cv:       CVWindow,
     contact:  ContactWindow,
+    settings: SettingsWindow,
+};
+
+const TRANSLATIONS = {
+    en: {
+        labels: { about: "About", projects: "Projects", skills: "Skills", cv: "CV", contact: "Contact", settings: "Settings" },
+        titles: { about: "About.txt", projects: "Projects/", skills: "Skills.dat", cv: "CV.doc", contact: "Contact.form", settings: "Settings.exe" }
+    },
+    de: {
+        labels: { about: "Ich", projects: "Projekte", skills: "Fähigkeiten", cv: "Lebenslauf", contact: "Kontakt", settings: "Einstellungen" },
+        titles: { about: "Ich.txt", projects: "Projekte/", skills: "Fähigkeiten.dat", cv: "Lebenslauf.doc", contact: "Kontakt.form", settings: "Einstellungen.exe" }
+    }
 };
 
 /**
@@ -39,6 +53,8 @@ const CONTENT_MAP = {
  *   useDraggable (inside Window) owns position during drag.
  */
 export default function Desktop() {
+    const { language } = useLanguage();
+    const t = TRANSLATIONS[language] || TRANSLATIONS.en;
     const [backgroundColor, setBackgroundColor] = useState("#008080");
 
     const {
@@ -55,7 +71,7 @@ export default function Desktop() {
     return (
         <div
             className={styles.desktop}
-            style={{ background: backgroundColor }}
+            style={{ backgroundColor: backgroundColor }}
         >
 
             {/* ══ Desktop Icons ═══════════════════════════════════ */}
@@ -65,7 +81,7 @@ export default function Desktop() {
                         key={cfg.id}
                         id={cfg.id}
                         icon={cfg.icon}
-                        label={cfg.label}
+                        label={t.labels[cfg.id] || cfg.label}
                         onClick={openWindow}
                     />
                 ))}
@@ -79,7 +95,7 @@ export default function Desktop() {
                     return (
                         <Window
                             key={win.id}
-                            title={win.title}
+                            title={t.titles[win.id] || win.title}
                             isActive={win.id === activeWindowId}
                             colorBar={win.colorBar}
                             position={win.position}
@@ -101,7 +117,7 @@ export default function Desktop() {
 
             {/* ══ Taskbar ═════════════════════════════════════════ */}
             <Taskbar
-                windows={taskbarWindows}
+                windows={taskbarWindows.map(w => ({ ...w, title: t.titles[w.id] || w.title }))}
                 activeWindowId={activeWindowId}
                 onWindowClick={(id) => {
                     const win = windows.find((w) => w.id === id);

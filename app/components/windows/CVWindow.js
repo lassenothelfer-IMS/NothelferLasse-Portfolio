@@ -1,16 +1,21 @@
 import { cv } from '../../data/cv';
 import styles from './CVWindow.module.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function CVWindow() {
+  const { language } = useLanguage();
+
   const handleDownload = () => {
     // In a real scenario, you would link to the actual PDF file
-    alert("CV download functionality to be implemented!");
+    alert(language === 'en' ? "CV download functionality to be implemented!" : "Lebenslauf-Download noch nicht implementiert!");
   };
+
+  const currentCv = cv[language] || cv.en;
 
   return (
     <div className={styles.cvWindow}>
       <ul className={styles.timeline}>
-        {cv.map((item, index) => (
+        {currentCv.map((item, index) => (
           <li key={index} className={styles.timelineItem}>
             <div className={styles.timelineDot}></div>
             <div className={styles.timelineYear}>{item.year}</div>
@@ -29,9 +34,8 @@ export default function CVWindow() {
           handleDownload();
         }}
       >
-        Download CV (PDF)
+        {language === 'en' ? 'Download CV (PDF)' : 'Lebenslauf herunterladen (PDF)'}
       </a>
     </div>
   );
 }
-
