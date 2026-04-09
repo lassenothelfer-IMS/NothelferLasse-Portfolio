@@ -59,7 +59,9 @@ export default function Window({
 
     useEffect(() => {
         if (prevMinimizedRef.current && !isMinimized) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHiddenAfterMin(false);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsRestoring(true);
             const t = setTimeout(() => setIsRestoring(false), ANIM_MS);
             prevMinimizedRef.current = isMinimized;

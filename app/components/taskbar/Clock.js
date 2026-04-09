@@ -14,10 +14,13 @@ export default function Clock() {
 
     useEffect(() => {
         // Set immediately to avoid blank flash
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTime(new Date());
         const id = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(id);
     }, []);
+
+    // ── Formatting ───────────────────────────────────────────────
 
     // Avoid hydration mismatch (server has no time)
     if (!time) return null;
