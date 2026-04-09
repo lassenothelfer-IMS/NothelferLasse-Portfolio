@@ -5,11 +5,6 @@ import { useLanguage } from '../../context/LanguageContext';
 export default function CVWindow() {
   const { language } = useLanguage();
 
-  const handleDownload = () => {
-    // In a real scenario, you would link to the actual PDF file
-    alert(language === 'en' ? "CV download functionality to be implemented!" : "Lebenslauf-Download noch nicht implementiert!");
-  };
-
   const currentCv = cv[language] || cv.en;
 
   return (
@@ -25,17 +20,6 @@ export default function CVWindow() {
           </li>
         ))}
       </ul>
-      <a
-        href="/Lasse_Nothelfer_CV.pdf"
-        download
-        className={styles.downloadButton}
-        onClick={(e) => {
-          e.preventDefault();
-          handleDownload();
-        }}
-      >
-        {language === 'en' ? 'Download CV (PDF)' : 'Lebenslauf herunterladen (PDF)'}
-      </a>
     </div>
   );
 }
