@@ -1,0 +1,38 @@
+.settingsWindow {
+  padding: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.languageOptions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 16px;
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-top-color: #ffffff;
+  border-left-color: #ffffff;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000;
+}
+
+.button:active, .active {
+  background-color: #e0e0e0;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  box-shadow: 1px 1px 0px #000;
+  transform: translate(1px, 1px);
+}
