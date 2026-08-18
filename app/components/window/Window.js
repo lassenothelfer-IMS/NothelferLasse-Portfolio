@@ -43,6 +43,10 @@ export default function Window({
                                    children,
                                }) {
     const ANIM_MS = 200;
+    const TASKBAR_H = 40; // keep the maximized window clear of the taskbar
+
+    // ── Maximize state ────────────────────────────────────────
+    const [isMaximized, setIsMaximized] = useState(false);
 
     // ── Animation state ───────────────────────────────────────
     const [justOpened, setJustOpened]     = useState(true);
@@ -96,6 +100,12 @@ export default function Window({
         onDragStart:     onFocus, // bump z-index when drag starts
     });
 
+    // A maximized window fills the screen and can't be dragged.
+    const onTitleBarMouseDown = (e) => {
+        if (isMaximized) return;
+        handleTitleBarMouseDown(e);
+    };
+
     // ── CSS class lists ──────────────────────────────────────────
     const windowClass = [
         styles.window,
@@ -124,13 +134,23 @@ export default function Window({
     return (
         <div
             className={windowClass}
-            style={{
-                left:   livePos.x,   // ← useDraggable's local state (smooth)
-                top:    livePos.y,
-                width:  size.width,
-                height: size.height ?? "auto",
-                zIndex,
-            }}
+            style={
+                isMaximized
+                    ? {
+                        left:   0,
+                        top:    0,
+                        width:  "100vw",
+                        height: `calc(100vh - ${TASKBAR_H}px)`,
+                        zIndex,
+                    }
+                    : {
+                        left:   livePos.x,   // ← useDraggable's local state (smooth)
+                        top:    livePos.y,
+                        width:  size.width,
+                        height: size.height ?? "auto",
+                        zIndex,
+                    }
+            }
             // Any click anywhere in the window brings it to front
             onMouseDown={onFocus}
         >
@@ -139,7 +159,8 @@ export default function Window({
                 className={titleBarClass}
                 // This is what makes the window draggable
                 // Buttons inside must have data-no-drag to stop propagation
-                onMouseDown={handleTitleBarMouseDown}
+                onMouseDown={onTitleBarMouseDown}
+                onDoubleClick={() => setIsMaximized((m) => !m)}
             >
                 {/* Traffic light buttons */}
                 <div className={styles.controls} data-no-drag>
@@ -157,9 +178,13 @@ export default function Window({
                         title="Minimieren"
                         aria-label="Fenster minimieren"
                     />
-                    {/* Green expand button — visual only for now */}
-                    <div
+                    {/* Green expand button — toggles maximize / restore */}
+                    <button
                         className={`${styles.btn} ${styles.btnExpand}`}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => { e.stopPropagation(); setIsMaximized((m) => !m); }}
+                        title={isMaximized ? "Wiederherstellen" : "Maximieren"}
+                        aria-label={isMaximized ? "Fenster wiederherstellen" : "Fenster maximieren"}
                         data-no-drag
                     />
                 </div>
@@ -174,7 +199,11 @@ export default function Window({
             {/* ══ Scrollable Content ══════════════════════════════ */}
             <div
                 className={styles.content}
-                style={{ maxHeight: size.height ? size.height - 34 : "70vh" }}
+                style={{
+                    maxHeight: isMaximized
+                        ? `calc(100vh - ${TASKBAR_H}px - 34px)`
+                        : size.height ? size.height - 34 : "70vh",
+                }}
             >
                 {children}
             </div>

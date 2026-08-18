@@ -10,6 +10,7 @@ export default function ContactWindow() {
     name: '',
     email: '',
     message: '',
+    company: '', // honeypot — must stay empty
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,15 +57,12 @@ export default function ContactWindow() {
 
         if (response.ok && data.success) {
           setSubmitStatus('success');
-          setFormData({ name: '', email: '', message: '' });
-          alert(language === 'en' ? "Message sent successfully!" : "Nachricht erfolgreich gesendet!");
+          setFormData({ name: '', email: '', message: '', company: '' });
         } else {
           setSubmitStatus('error');
-          alert((language === 'en' ? "Error sending message: " : "Fehler beim Senden der Nachricht: ") + (data.error || "Unknown error"));
         }
       } catch (error) {
         setSubmitStatus('error');
-        alert(language === 'en' ? "An unexpected error occurred." : "Ein unerwarteter Fehler ist aufgetreten.");
       } finally {
         setIsSubmitting(false);
       }
@@ -79,12 +77,25 @@ export default function ContactWindow() {
   return (
     <div className={styles.contactWindow}>
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {/* Honeypot: hidden from users, tempting to bots. Kept out of the
+            tab order and hidden from assistive tech. */}
+        <input
+          type="text"
+          name="company"
+          value={formData.company}
+          onChange={handleChange}
+          className={styles.honeypot}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
         <div className={styles.formGroup}>
           <label htmlFor="name" className={styles.label}>{language === 'en' ? 'Name' : 'Name'}</label>
           <input
             type="text"
             id="name"
             name="name"
+            maxLength={100}
             placeholder={language === 'en' ? "Your Name" : "Dein Name"}
             value={formData.name}
             onChange={handleChange}
@@ -98,6 +109,7 @@ export default function ContactWindow() {
             type="email"
             id="email"
             name="email"
+            maxLength={254}
             placeholder={language === 'en' ? "your.email@example.com" : "deine.email@beispiel.de"}
             value={formData.email}
             onChange={handleChange}
@@ -110,6 +122,7 @@ export default function ContactWindow() {
           <textarea
             id="message"
             name="message"
+            maxLength={5000}
             placeholder={language === 'en' ? "How can I help you?" : "Wie kann ich dir helfen?"}
             value={formData.message}
             onChange={handleChange}

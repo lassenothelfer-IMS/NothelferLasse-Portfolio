@@ -140,7 +140,7 @@
 
 .btnClose    { background: #ff5f57; }
 .btnMinimize { background: #febc2e; }
-.btnExpand   { background: #28c840; cursor: default; }
+.btnExpand   { background: #28c840; cursor: pointer; }
 
 /* ════════════════════════════════════════════════════════════
    Title Text

@@ -1,8 +1,8 @@
 "use client";
 
 import { useWindowManager }  from "../../hooks/useWindowManager";
-import { useState } from "react";
-import { WINDOW_CONFIGS }    from "../../constants/windows";
+import { useEffect, useState } from "react";
+import { WINDOW_CONFIGS, t }  from "../../constants/windows";
 
 import DesktopIcon    from "./DesktopIcon";
 import Window         from "../window/Window";
@@ -30,16 +30,8 @@ const CONTENT_MAP = {
     settings: SettingsWindow,
 };
 
-const TRANSLATIONS = {
-    en: {
-        labels: { about: "About", projects: "Projects", skills: "Skills", cv: "CV", contact: "Contact", settings: "Settings" },
-        titles: { about: "About.txt", projects: "Projects/", skills: "Skills.dat", cv: "CV.doc", contact: "Contact.form", settings: "Settings.exe" }
-    },
-    de: {
-        labels: { about: "Ich", projects: "Projekte", skills: "Fähigkeiten", cv: "Lebenslauf", contact: "Kontakt", settings: "Einstellungen" },
-        titles: { about: "Ich.txt", projects: "Projekte/", skills: "Fähigkeiten.dat", cv: "Lebenslauf.doc", contact: "Kontakt.form", settings: "Einstellungen.exe" }
-    }
-};
+const DEFAULT_BG = "#008080";
+const BG_STORAGE_KEY = "desktop-bg-color";
 
 /**
  * Desktop
@@ -54,8 +46,19 @@ const TRANSLATIONS = {
  */
 export default function Desktop() {
     const { language } = useLanguage();
-    const t = TRANSLATIONS[language] || TRANSLATIONS.en;
-    const [backgroundColor, setBackgroundColor] = useState("#008080");
+    const [backgroundColor, setBackgroundColor] = useState(DEFAULT_BG);
+
+    // Restore the saved background color on mount (client-only to avoid
+    // SSR hydration mismatch — server always renders the default).
+    useEffect(() => {
+        const saved = localStorage.getItem(BG_STORAGE_KEY);
+        if (saved) setBackgroundColor(saved);
+    }, []);
+
+    // Persist whenever it changes.
+    useEffect(() => {
+        localStorage.setItem(BG_STORAGE_KEY, backgroundColor);
+    }, [backgroundColor]);
 
     const {
         windows,
@@ -81,7 +84,7 @@ export default function Desktop() {
                         key={cfg.id}
                         id={cfg.id}
                         icon={cfg.icon}
-                        label={t.labels[cfg.id] || cfg.label}
+                        label={t(cfg.label, language)}
                         onClick={openWindow}
                     />
                 ))}
@@ -95,7 +98,7 @@ export default function Desktop() {
                     return (
                         <Window
                             key={win.id}
-                            title={t.titles[win.id] || win.title}
+                            title={t(win.title, language)}
                             isActive={win.id === activeWindowId}
                             colorBar={win.colorBar}
                             position={win.position}
@@ -117,7 +120,7 @@ export default function Desktop() {
 
             {/* ══ Taskbar ═════════════════════════════════════════ */}
             <Taskbar
-                windows={taskbarWindows.map(w => ({ ...w, title: t.titles[w.id] || w.title }))}
+                windows={taskbarWindows.map(w => ({ ...w, title: t(w.title, language) }))}
                 activeWindowId={activeWindowId}
                 onWindowClick={(id) => {
                     const win = windows.find((w) => w.id === id);

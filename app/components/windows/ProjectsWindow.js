@@ -27,6 +27,11 @@ export default function ProjectsWindow() {
               <a href={project.github} target="_blank" rel="noopener noreferrer" className={styles.link}>
                 GitHub
               </a>
+              {project.demo && project.demo !== '#' && (
+                <a href={project.demo} target="_blank" rel="noopener noreferrer" className={styles.link}>
+                  {language === 'en' ? 'Live Demo' : 'Live-Demo'}
+                </a>
+              )}
             </div>
           </div>
         ))}

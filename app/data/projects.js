@@ -1,6 +1,16 @@
 export const projects = {
   en: [
     {
+      id:     "betquiz",
+      title:  "BetQuiz",
+      desc:   "A real-time multiplayer quiz where you don't just answer — you bet points on your answer against live, parimutuel-style odds that shift as everyone wagers. No signup, 4-letter room codes, slot-machine bonus rounds.",
+      tags:   ["Next.js", "Socket.io", "Node", "Tailwind"],
+      color:  "#ffb86c",
+      icon:   "🎲",
+      github: "https://github.com/lassenothelfer-IMS/BetQuiz",
+      demo:   "https://betquiz.onrender.com",
+    },
+    {
       id:     "portfolio",
       title:  "NothelferLasse-Portfolio",
       desc:   "This portfolio! Retro Mac OS inspired desktop interface, built with Next.js, React, and pure CSS. Fully interactive.",
@@ -32,6 +42,16 @@ export const projects = {
     }
   ],
   de: [
+    {
+      id:     "betquiz",
+      title:  "BetQuiz",
+      desc:   "Ein Echtzeit-Multiplayer-Quiz, bei dem du nicht nur antwortest — du setzt Punkte auf deine Antwort gegen dynamische Live-Quoten im Totalisator-Stil, die sich mit jeder Wette verschieben. Ohne Anmeldung, 4-stellige Raumcodes, Slot-Machine-Bonusrunden.",
+      tags:   ["Next.js", "Socket.io", "Node", "Tailwind"],
+      color:  "#ffb86c",
+      icon:   "🎲",
+      github: "https://github.com/lassenothelfer-IMS/BetQuiz",
+      demo:   "https://betquiz.onrender.com",
+    },
     {
       id:     "portfolio",
       title:  "NothelferLasse-Portfolio",

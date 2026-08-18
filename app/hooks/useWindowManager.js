@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { WINDOW_CONFIGS } from "../constants/windows";
 
 // Build initial window state from config — all windows start closed
@@ -26,16 +26,20 @@ function buildInitialWindows() {
  */
 export function useWindowManager() {
     const [windows,  setWindows]  = useState(buildInitialWindows);
-    const [highestZ, setHighestZ] = useState(10);
 
     // ── Private helpers ──────────────────────────────────────────
 
+    // Z-index counter lives in a ref, not state: it is never rendered
+    // directly, and a ref always reads the latest value — so rapid
+    // successive focus/open calls in the same tick can't collide on a
+    // stale closure value (which the old `highestZ` state could).
+    const zCounter = useRef(10);
+
     /** Increment the global z-counter and return the new value */
     const bumpZ = useCallback(() => {
-        const next = highestZ + 1;
-        setHighestZ(next);
-        return next;
-    }, [highestZ]);
+        zCounter.current += 1;
+        return zCounter.current;
+    }, []);
 
     /** Apply a partial update to one window by id */
     const updateWindow = useCallback((id, patch) => {
