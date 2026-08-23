@@ -26,6 +26,18 @@
     z-index: 1;
 }
 
+/* ── Mobile: spread icons across the top in a responsive grid ── */
+@media (max-width: 767px) {
+    .iconGrid {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+        gap: 6px;
+    }
+}
+
 /* ── Subtle scanline overlay for retro feel (optional) ────── */
 .desktop::after {
     content: '';

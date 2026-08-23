@@ -36,6 +36,7 @@ export default function Window({
                                    size             = { width: 600, height: "auto" },
                                    zIndex           = 10,
                                    isMinimized      = false,
+                                   forceFullscreen  = false,
                                    onClose,
                                    onMinimize,
                                    onFocus,
@@ -100,9 +101,12 @@ export default function Window({
         onDragStart:     onFocus, // bump z-index when drag starts
     });
 
-    // A maximized window fills the screen and can't be dragged.
+    // Fullscreen = user-maximized (desktop) OR forced (mobile).
+    // A fullscreen window fills the screen and can't be dragged.
+    const fullscreen = isMaximized || forceFullscreen;
+
     const onTitleBarMouseDown = (e) => {
-        if (isMaximized) return;
+        if (fullscreen) return;
         handleTitleBarMouseDown(e);
     };
 
@@ -135,12 +139,12 @@ export default function Window({
         <div
             className={windowClass}
             style={
-                isMaximized
+                fullscreen
                     ? {
                         left:   0,
                         top:    0,
                         width:  "100vw",
-                        height: `calc(100vh - ${TASKBAR_H}px)`,
+                        height: `calc(100dvh - ${TASKBAR_H}px)`,
                         zIndex,
                     }
                     : {
@@ -160,7 +164,7 @@ export default function Window({
                 // This is what makes the window draggable
                 // Buttons inside must have data-no-drag to stop propagation
                 onMouseDown={onTitleBarMouseDown}
-                onDoubleClick={() => setIsMaximized((m) => !m)}
+                onDoubleClick={() => !forceFullscreen && setIsMaximized((m) => !m)}
             >
                 {/* Traffic light buttons */}
                 <div className={styles.controls} data-no-drag>
@@ -178,15 +182,18 @@ export default function Window({
                         title="Minimieren"
                         aria-label="Fenster minimieren"
                     />
-                    {/* Green expand button — toggles maximize / restore */}
-                    <button
-                        className={`${styles.btn} ${styles.btnExpand}`}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={(e) => { e.stopPropagation(); setIsMaximized((m) => !m); }}
-                        title={isMaximized ? "Wiederherstellen" : "Maximieren"}
-                        aria-label={isMaximized ? "Fenster wiederherstellen" : "Fenster maximieren"}
-                        data-no-drag
-                    />
+                    {/* Green expand button — toggles maximize / restore.
+                        Hidden on mobile, where windows are always fullscreen. */}
+                    {!forceFullscreen && (
+                        <button
+                            className={`${styles.btn} ${styles.btnExpand}`}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={(e) => { e.stopPropagation(); setIsMaximized((m) => !m); }}
+                            title={isMaximized ? "Wiederherstellen" : "Maximieren"}
+                            aria-label={isMaximized ? "Fenster wiederherstellen" : "Fenster maximieren"}
+                            data-no-drag
+                        />
+                    )}
                 </div>
 
                 {/* Title — pointer-events: none in CSS, can't accidentally start drag */}
@@ -200,8 +207,8 @@ export default function Window({
             <div
                 className={styles.content}
                 style={{
-                    maxHeight: isMaximized
-                        ? `calc(100vh - ${TASKBAR_H}px - 34px)`
+                    maxHeight: fullscreen
+                        ? `calc(100dvh - ${TASKBAR_H}px - 34px)`
                         : size.height ? size.height - 34 : "70vh",
                 }}
             >
@@ -209,7 +216,7 @@ export default function Window({
             </div>
 
             {/* ══ Resize handle (visual hint only) ════════════════ */}
-            <div className={styles.resizeHint} aria-hidden="true" />
+            {!fullscreen && <div className={styles.resizeHint} aria-hidden="true" />}
         </div>
     );
 }

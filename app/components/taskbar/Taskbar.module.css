@@ -104,3 +104,31 @@
     border-left: 1px solid #aaa;
     margin-left: 6px;
 }
+
+/* ── Mobile: tighten spacing, let the window list scroll, drop
+      the clock to reclaim width ─────────────────────────────── */
+@media (max-width: 767px) {
+    .taskbar {
+        gap: 2px;
+        padding: 0 6px;
+    }
+
+    .brand {
+        padding-right: 6px;
+        margin-right: 4px;
+        gap: 2px;
+    }
+
+    .windowList {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .taskItem {
+        max-width: 130px;
+    }
+
+    .clock {
+        display: none;
+    }
+}

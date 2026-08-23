@@ -1,6 +1,7 @@
 "use client";
 
 import { useWindowManager }  from "../../hooks/useWindowManager";
+import { useIsMobile }        from "../../hooks/useIsMobile";
 import { useEffect, useState } from "react";
 import { WINDOW_CONFIGS, t }  from "../../constants/windows";
 
@@ -46,6 +47,7 @@ const BG_STORAGE_KEY = "desktop-bg-color";
  */
 export default function Desktop() {
     const { language } = useLanguage();
+    const isMobile = useIsMobile();
     const [backgroundColor, setBackgroundColor] = useState(DEFAULT_BG);
 
     // Restore the saved background color on mount (client-only to avoid
@@ -90,9 +92,14 @@ export default function Desktop() {
                 ))}
             </div>
 
-            {/* ══ Open, non-minimized Windows ═════════════════════ */}
-            {windows
-                .filter((w) => w.isOpen)
+            {/* ══ Open Windows ════════════════════════════════════
+                Desktop: render every open window (draggable, overlapping).
+                Mobile:  render only the focused window, fullscreen — one
+                         app at a time, switched via the taskbar. */}
+            {(isMobile
+                ? windows.filter((w) => w.isOpen && !w.isMinimized && w.id === activeWindowId)
+                : windows.filter((w) => w.isOpen)
+            )
                 .map((win) => {
                     const Content = CONTENT_MAP[win.id];
                     return (
@@ -105,6 +112,7 @@ export default function Desktop() {
                             size={win.defaultSize}
                             zIndex={win.zIndex}
                             isMinimized={win.isMinimized}
+                            forceFullscreen={isMobile}
                             // Window management callbacks
                             onClose={()    => closeWindow(win.id)}
                             onMinimize={()  => minimizeWindow(win.id)}

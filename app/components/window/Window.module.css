@@ -199,3 +199,21 @@
     opacity: 0.6;
     pointer-events: none;
 }
+
+/* ════════════════════════════════════════════════════════════
+   Mobile: larger touch targets + readable title bar
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+    .titleBar {
+        padding: 8px 12px;
+    }
+
+    .btn {
+        width: 20px;
+        height: 20px;
+    }
+
+    .titleText {
+        font-size: 14px;
+    }
+}
