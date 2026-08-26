@@ -1,7 +1,7 @@
 export const skills = [
   {
     name: "Java",
-    level: 50,
+    level: 45,
     color: "#ff79c6",
   },
   {
@@ -16,12 +16,12 @@ export const skills = [
   },
   {
     name: "Web Development (HTML, CSS, JS)",
-    level: 40,
+    level: 70,
     color: "#8be9fd",
   },
   {
     name: "React",
-    level: 30,
+    level: 55,
     color: "#f1fa8c",
   },
 ];
