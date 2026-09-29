@@ -1,37 +1,271 @@
-/* ── Reset ────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   Portfolio OS — design tokens and Platinum primitives
+   Modelled on Mac OS 8/9 "Platinum". Component styles live in CSS
+   modules; everything shared (tokens, controls, scrollbars) is here.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Surfaces */
+    --platinum:    #dddddd;
+    --platinum-hi: #eeeeee;
+    --platinum-lo: #c4c4c4;
+    --shade:       #8a8a8a;
+    --shade-dark:  #555555;
+    --paper:       #ffffff;
+    --ink:         #000000;
+
+    /* Text */
+    --text:        #141414;
+    --text-muted:  #4e4e4e;   /* ≥ 7:1 on white, ≥ 5.5:1 on platinum */
+
+    /* Accents */
+    --accent:      #3a3aa8;   /* menu + selection highlight */
+    --accent-text: #ffffff;
+    --focus-ring:  #8f8ff0;   /* Mac OS 8 text-field focus lavender */
+    --success:     #1d6b2c;
+    --danger:      #a3231d;
+
+    /* Type — font variables are set on <html> by next/font */
+    --font-chrome: var(--font-pixel), "Chicago", "Charcoal", system-ui, sans-serif;
+    --font-text:   var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-code:   var(--font-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    /* Metrics — keep --menubar-h in sync with MENUBAR_H in constants/windows.js */
+    --menubar-h:   24px;
+    --titlebar-h:  22px;
+}
+
+/* Phones: a taller, touchable menu bar (JS only needs the desktop value) */
+@media (max-width: 767px) {
+    :root { --menubar-h: 40px; }
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* desktop never scrolls */
-  font-family: 'Courier New', Courier, monospace;
+    height: 100%;
+    overflow: hidden;           /* the desktop never scrolls; windows do */
+    background: var(--ink);     /* shows at the rounded screen corners */
+    color: var(--text);
+    font-family: var(--font-text);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
 }
 
-/* ── Window animations ────────────────────────────────────── */
-@keyframes windowOpen {
-  from { opacity: 0; transform: scale(0.88); }
-  to   { opacity: 1; transform: scale(1);    }
+img, svg { display: block; }
+button, input, textarea, select { font: inherit; color: inherit; }
+a { color: inherit; }
+ul, ol { list-style: none; }
+
+::selection { background: var(--accent); color: var(--accent-text); }
+
+:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
 }
 
-@keyframes iconBounce {
-  0%, 100% { transform: translateY(0);    }
-  40%      { transform: translateY(-7px); }
-  70%      { transform: translateY(-3px); }
+.visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
-/* ── Retro scrollbar ──────────────────────────────────────── */
-::-webkit-scrollbar        { width: 14px; }
-::-webkit-scrollbar-track  { background: #b8b4ac; border: 1px solid #999; }
-::-webkit-scrollbar-thumb  {
-  background: linear-gradient(180deg, #e8e4dc, #a8a49c);
-  border: 1px solid #888;
+/* ════════════════════════════════════════════════════════════
+   Push buttons
+   ════════════════════════════════════════════════════════════ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 26px;
+    padding: 3px 14px 4px;
+    font-family: var(--font-chrome);
+    font-size: 14px;
+    line-height: 1;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    background: linear-gradient(var(--platinum-hi), var(--platinum-lo));
+    border: 1px solid var(--ink);
+    border-radius: 5px;
+    box-shadow: inset 1px 1px 0 var(--paper), inset -1px -1px 0 var(--shade);
+    cursor: pointer;
+    user-select: none;
 }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #dedad2, #989490); }
+.btn:hover  { background: linear-gradient(var(--paper), var(--platinum)); }
+.btn:active {
+    background: linear-gradient(var(--shade), var(--platinum-lo));
+    box-shadow: inset 1px 1px 0 var(--shade-dark), inset -1px -1px 0 var(--platinum-hi);
+}
+.btn:disabled {
+    color: var(--shade);
+    border-color: var(--shade);
+    background: var(--platinum);
+    box-shadow: none;
+    cursor: default;
+}
 
-/* ── Text selection ───────────────────────────────────────── */
-::selection { background: #316ac5; color: #fff; }
+/* Default button: the thick outer ring Mac OS used for "press Return" */
+.btn-default {
+    box-shadow:
+        inset 1px 1px 0 var(--paper),
+        inset -1px -1px 0 var(--shade),
+        0 0 0 2px var(--platinum),
+        0 0 0 4px var(--ink);
+    margin: 4px;
+}
+.btn-default:active {
+    box-shadow:
+        inset 1px 1px 0 var(--shade-dark),
+        inset -1px -1px 0 var(--platinum-hi),
+        0 0 0 2px var(--platinum),
+        0 0 0 4px var(--ink);
+}
+
+/* External-link hint glyph after a button label */
+.btn[target="_blank"]::after {
+    content: "↗";
+    font-family: var(--font-text);
+    font-size: 12px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Text fields
+   ════════════════════════════════════════════════════════════ */
+.field {
+    display: block;
+    width: 100%;
+    padding: 6px 8px;
+    font-family: var(--font-text);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    /* etched surround: dark above/left, light below/right */
+    box-shadow: -1px -1px 0 var(--shade), 1px 1px 0 var(--paper);
+}
+.field::placeholder { color: #767676; }
+.field:focus {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 1px;
+}
+.field[aria-invalid="true"] { border-color: var(--danger); }
+textarea.field { resize: vertical; min-height: 120px; }
+
+/* ════════════════════════════════════════════════════════════
+   Group boxes (fieldset + legend)
+   ════════════════════════════════════════════════════════════ */
+.group {
+    position: relative;
+    border: 1px solid var(--shade);
+    box-shadow: 1px 1px 0 var(--paper), inset 1px 1px 0 var(--paper);
+    padding: 16px 14px 14px;
+    margin-top: 10px;
+}
+.group > legend {
+    padding: 0 4px;
+    margin-left: -2px;
+    font-family: var(--font-chrome);
+    font-size: 14px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Radio buttons
+   ════════════════════════════════════════════════════════════ */
+.radio {
+    appearance: none;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--paper), var(--platinum-lo));
+    cursor: pointer;
+}
+.radio:checked {
+    background:
+        radial-gradient(circle, var(--ink) 0 3px, transparent 3.5px),
+        radial-gradient(circle at 35% 35%, var(--paper), var(--platinum-lo));
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-chrome);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Tags
+   ════════════════════════════════════════════════════════════ */
+.chip {
+    display: inline-block;
+    padding: 1px 7px;
+    font-family: var(--font-code);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--platinum-hi);
+    border: 1px solid var(--shade);
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Platinum scrollbars (any .scroll container)
+   Chromium ignores ::-webkit-scrollbar when the standard properties
+   are set, so those are applied to Firefox only.
+   ════════════════════════════════════════════════════════════ */
+.scroll::-webkit-scrollbar { width: 16px; height: 16px; }
+.scroll::-webkit-scrollbar-track {
+    background: repeating-conic-gradient(var(--platinum-lo) 0 25%, var(--platinum) 0 50%) 0 0 / 2px 2px;
+    border-left: 1px solid var(--ink);
+}
+.scroll::-webkit-scrollbar-thumb {
+    border: 1px solid var(--ink);
+    border-right: 0;
+    background:
+        repeating-linear-gradient(to bottom, var(--paper) 0 1px, var(--shade) 1px 2px) center / 8px 8px no-repeat,
+        linear-gradient(to right, var(--platinum-hi), var(--platinum-lo));
+    box-shadow: inset 1px 1px 0 var(--paper), inset -1px -1px 0 var(--shade);
+}
+.scroll::-webkit-scrollbar-corner { background: var(--platinum); }
+
+@supports (-moz-appearance: none) {
+    .scroll { scrollbar-color: var(--platinum-lo) var(--platinum); }
+}
+
+/* Touch screens scroll by swiping; don't spend 16px of width on a bar */
+@media (pointer: coarse) {
+    .scroll::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   Motion
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Touch devices get roomier controls */
+@media (pointer: coarse) {
+    .btn { min-height: 36px; padding: 6px 16px; }
+    .radio { width: 18px; height: 18px; }
+}

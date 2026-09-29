@@ -1,38 +1,44 @@
-"use client";
-
-import { useState } from "react";
+import PixelIcon from "../icons/PixelIcon";
 import styles from "./DesktopIcon.module.css";
 
 /**
- * DesktopIcon
- *
- * Props:
- *   id      {string}   Matches a window id in WINDOW_CONFIGS
- *   icon    {string}   Emoji glyph
- *   label   {string}   Text beneath the icon
- *   onClick {fn(id)}   Triggers openWindow in useWindowManager
+ * A desktop icon. Either opens a window (`onOpen`, called with the icon's
+ * on-screen rect for the zoom animation) or, with `href`, is an alias to an
+ * external site — Mac OS showed aliases with an arrow badge and an italic
+ * name.
  */
-export default function DesktopIcon({ id, icon, label, onClick }) {
-    const [selected, setSelected] = useState(false);
+export default function DesktopIcon({ icon, label, ariaLabel, isOpen = false, onOpen, href }) {
+    const art = (
+        <span className={styles.art}>
+            <PixelIcon name={icon} size={32} />
+            {href && <PixelIcon name="alias" size={14} className={styles.aliasBadge} />}
+        </span>
+    );
 
-    const handleClick = () => {
-        // Brief visual selection flash before window opens
-        setSelected(true);
-        onClick(id);
-        setTimeout(() => setSelected(false), 300);
-    };
+    if (href) {
+        return (
+            <a
+                className={`${styles.icon} ${styles.alias}`}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={ariaLabel}
+            >
+                {art}
+                <span className={styles.label}>{label}</span>
+            </a>
+        );
+    }
 
     return (
-        <div
-            className={`${styles.icon} ${selected ? styles.selected : ""}`}
-            onClick={handleClick}
-            role="button"
-            aria-label={`${label} öffnen`}
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && handleClick()}
+        <button
+            type="button"
+            className={`${styles.icon} ${isOpen ? styles.opened : ""}`}
+            aria-label={ariaLabel}
+            onClick={(e) => onOpen(e.currentTarget.firstChild.getBoundingClientRect())}
         >
-            <span className={styles.emoji} aria-hidden="true">{icon}</span>
+            {art}
             <span className={styles.label}>{label}</span>
-        </div>
+        </button>
     );
 }

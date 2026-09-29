@@ -1,65 +1,84 @@
 "use client";
 
-import { skills } from '../../data/skills';
-import styles from './SkillsWindow.module.css';
-import { useState, useEffect } from 'react';
+import { LEVELS, levelIndex, skillGroups } from "../../data/skills";
+import { projects } from "../../data/projects";
+import { usePreferences, useStrings } from "../../context/PreferencesContext";
+import { useDesktop } from "../../context/DesktopContext";
+import { pick } from "../../i18n/pick";
+import styles from "./SkillsWindow.module.css";
 
-function SkillItem({ skill }) {
-  const [displayedLevel, setDisplayedLevel] = useState(0);
+const PROJECT_TITLES = Object.fromEntries(projects.map((p) => [p.id, p.title]));
 
-  useEffect(() => {
-    let startTimestamp = null;
-    const duration = 1500; // ms
-    let animationFrame;
-
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = timestamp - startTimestamp;
-      const fraction = Math.min(progress / duration, 1);
-      
-      // ease-out cubic
-      const easeOut = 1 - Math.pow(1 - fraction, 3);
-      
-      setDisplayedLevel(Math.floor(easeOut * skill.level));
-
-      if (progress < duration) {
-        animationFrame = requestAnimationFrame(step);
-      } else {
-        setDisplayedLevel(skill.level);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [skill.level]);
-
-  return (
-    <li className={styles.skillItem}>
-      <div className={styles.skillHeader}>
-        <div className={styles.skillName}>{skill.name}</div>
-        <div className={styles.skillPercent} style={{ color: skill.color }}>{displayedLevel}%</div>
-      </div>
-      <div className={styles.skillBar}>
-        <div
-          className={styles.skillLevel}
-          style={{
-            width: `${displayedLevel}%`,
-            backgroundColor: skill.color,
-          }}
-        />
-      </div>
-    </li>
-  );
+/** Three-segment level meter. Decorative: the level is also written out. */
+function Meter({ index }) {
+    return (
+        <span className={styles.meter} aria-hidden="true">
+            {LEVELS.map((_, i) => (
+                <span key={i} className={i <= index ? styles.filled : undefined} />
+            ))}
+        </span>
+    );
 }
 
 export default function SkillsWindow() {
-  return (
-    <div className={styles.skillsWindow}>
-      <ul className={styles.skillList}>
-        {skills.map(skill => (
-          <SkillItem key={skill.name} skill={skill} />
-        ))}
-      </ul>
-    </div>
-  );
+    const { language } = usePreferences();
+    const T = useStrings();
+    const { open } = useDesktop();
+
+    const showProject = (projectId) => (e) =>
+        open("projects", { from: e.currentTarget.getBoundingClientRect(), params: { projectId } });
+
+    return (
+        <div className={styles.skills}>
+            <p className={styles.intro}>{T.skills.intro}</p>
+
+            <div className={styles.legend}>
+                <span className={styles.legendTitle}>{T.skills.scale}</span>
+                <ul className={styles.legendItems}>
+                    {LEVELS.map((level, i) => (
+                        <li key={i}>
+                            <Meter index={i} />
+                            {pick(level.label, language)}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {skillGroups.map((group) => (
+                <section key={group.id} className={styles.group} aria-labelledby={`skills-${group.id}`}>
+                    <h3 id={`skills-${group.id}`} className={styles.groupTitle}>{pick(group.title, language)}</h3>
+                    <ul>
+                        {group.skills.map((skill) => {
+                            const index = levelIndex(skill.level);
+                            const name = pick(skill.name, language);
+                            return (
+                                <li key={name} className={styles.skill}>
+                                    <span className={styles.name}>{name}</span>
+                                    <span className={styles.level}>
+                                        <Meter index={index} />
+                                        {pick(LEVELS[index].label, language)}
+                                    </span>
+                                    {skill.usedIn.length > 0 && (
+                                        <p className={styles.usedIn}>
+                                            <span>{T.skills.usedIn}:</span>
+                                            {skill.usedIn.map((projectId) => (
+                                                <button
+                                                    key={projectId}
+                                                    type="button"
+                                                    className={styles.projectLink}
+                                                    onClick={showProject(projectId)}
+                                                >
+                                                    {PROJECT_TITLES[projectId]}
+                                                </button>
+                                            ))}
+                                        </p>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+            ))}
+        </div>
+    );
 }

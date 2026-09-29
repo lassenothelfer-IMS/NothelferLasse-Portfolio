@@ -1,75 +1,147 @@
-.projectsWindow {
-  padding: 1rem;
-  font-family: 'Chicago', sans-serif;
+/* Query container for the narrow layout (a container can't style itself) */
+.container {
+    height: 100%;
+    container-type: inline-size;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
+.finder {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
-.card {
-  border: 2px solid #000;
-  background-color: #fff;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
+/* Finder's "n items" strip */
+.infoBar {
+    flex-shrink: 0;
+    padding: 3px 10px;
+    font-family: var(--font-chrome);
+    font-size: 13px;
+    text-align: center;
+    background: var(--platinum);
+    border-bottom: 1px solid var(--ink);
 }
 
-.cardHeader {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
+.split {
+    display: flex;
+    flex: 1;
+    min-height: 0;
 }
 
-.cardIcon {
-  font-size: 1.5rem;
-  margin-right: 0.5rem;
+/* ── List ────────────────────────────────────────────────── */
+.listPane {
+    flex: 0 0 46%;
+    min-width: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--ink);
 }
 
-.cardTitle {
-  font-weight: bold;
-  font-size: 1.2rem;
+.listHeader,
+.row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
 }
 
-.cardDescription {
-  flex-grow: 1;
-  margin-bottom: 1rem;
-  line-height: 1.4;
+.listHeader {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 3px 10px;
+    font-family: var(--font-chrome);
+    font-size: 13px;
+    background: linear-gradient(var(--platinum-hi), var(--platinum));
+    border-bottom: 1px solid var(--shade);
+}
+.listHeader span + span {
+    padding-left: 10px;
+    border-left: 1px solid var(--shade);
 }
 
-.cardTags {
-  margin-bottom: 1rem;
+.list { outline: none; }
+.list:focus-visible { box-shadow: inset 0 0 0 2px var(--focus-ring); }
+
+.row {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: default;
+}
+.row:nth-child(even) { background: #f4f4f4; }
+.row[aria-selected="true"] {
+    background: var(--accent);
+    color: var(--accent-text);
 }
 
-.tag {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.8rem;
-  color: #000;
-  border: 1px solid #000;
+.nameCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-weight: 600;
+}
+.nameCell span,
+.kindCell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.kindCell { font-size: 13px; }
+
+/* ── Detail ──────────────────────────────────────────────── */
+.detail {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 20px 22px;
 }
 
-.cardLinks {
-  display: flex;
-  gap: 1rem;
+.detailHead {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
 }
 
-.link {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: #000;
-  color: #fff;
-  text-decoration: none;
-  border: 2px solid #000;
-  transition: background-color 0.2s, color 0.2s;
+.title {
+    font-family: var(--font-chrome);
+    font-size: 22px;
+    line-height: 1.15;
 }
 
-.link:hover {
-  background-color: #fff;
-  color: #000;
+.kind {
+    font-size: 13px;
+    color: var(--text-muted);
 }
 
+.desc {
+    font-size: 15px;
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 14px 0 18px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Narrow window: list on top, detail below, one scroll ── */
+@container (max-width: 560px) {
+    .finder { height: auto; }
+    .split  { flex-direction: column; }
+    .listPane {
+        flex: none;
+        overflow: visible;
+        border-right: 0;
+        border-bottom: 1px solid var(--ink);
+    }
+    .detail { overflow: visible; padding: 18px 16px; }
+}

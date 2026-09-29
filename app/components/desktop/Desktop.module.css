@@ -1,55 +1,46 @@
 /* ════════════════════════════════════════════════════════════
-   Desktop — full-screen OS background
+   Screen + desktop
+   --wp-a / --wp-b come from the selected wallpaper (data/wallpapers.js)
    ════════════════════════════════════════════════════════════ */
-.desktop {
+.screen {
     position: fixed;
     inset: 0;
-    /* Classic System 7 teal */
-    background: #008080;
-    background-image:
-            radial-gradient(circle at 12% 55%, rgba(0, 80, 80, 0.7)  0%, transparent 55%),
-            radial-gradient(circle at 88% 12%, rgba(0, 160, 160, 0.5) 0%, transparent 45%);
+    background: repeating-conic-gradient(var(--wp-a) 0 25%, var(--wp-b) 0 50%) 0 0 / 2px 2px;
+    border-radius: 8px 8px 0 0;
     overflow: hidden;
-    /* Reserve space at the bottom for the taskbar */
-    padding-bottom: 40px;
 }
 
-/* ── Desktop icon column (left side) ─────────────────────── */
-.iconGrid {
+.desktop {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    inset: var(--menubar-h) 0 0 0;
+}
+
+/* ── Icons: a column on the right, like the classic Mac desktop.
+      Wraps into further columns (leftwards) on short screens. ── */
+.icons {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    /* Icons sit above everything except windows */
-    z-index: 1;
+    flex-wrap: wrap-reverse;
+    align-content: flex-start;
+    gap: 10px 6px;
 }
 
-/* ── Mobile: spread icons across the top in a responsive grid ── */
+/* A little space between the windows and the web aliases */
+.icons > a:first-of-type { margin-top: 12px; }
+
 @media (max-width: 767px) {
-    .iconGrid {
-        top: 12px;
-        left: 12px;
-        right: 12px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-        gap: 6px;
-    }
-}
+    .screen { border-radius: 0; }
 
-/* ── Subtle scanline overlay for retro feel (optional) ────── */
-.desktop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(0, 0, 0, 0.018) 2px,
-            rgba(0, 0, 0, 0.018) 4px
-    );
-    pointer-events: none;
-    z-index: 0;
+    .icons {
+        inset: 16px 12px auto 12px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+        justify-items: center;
+        gap: 14px 4px;
+    }
+    .icons > a:first-of-type { margin-top: 0; }
 }

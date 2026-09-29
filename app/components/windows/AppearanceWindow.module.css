@@ -1,0 +1,57 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px 18px;
+}
+
+/* ── Pattern swatches ────────────────────────────────────── */
+.swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 12px 10px;
+}
+
+.swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.sample {
+    width: 100%;
+    height: 46px;
+    background: repeating-conic-gradient(var(--a) 0 25%, var(--b) 0 50%) 0 0 / 2px 2px;
+    border: 1px solid var(--ink);
+    box-shadow: -1px -1px 0 var(--shade), 1px 1px 0 var(--paper);
+}
+
+.name {
+    padding: 0 4px;
+    font-family: var(--font-chrome);
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+/* Selected: thick frame + inverted label, like a selected icon */
+.swatch:has(input:checked) .sample {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+.swatch:has(input:checked) .name {
+    background: var(--ink);
+    color: var(--paper);
+}
+.swatch:has(input:focus-visible) .sample {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* ── Language ────────────────────────────────────────────── */
+.radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+}

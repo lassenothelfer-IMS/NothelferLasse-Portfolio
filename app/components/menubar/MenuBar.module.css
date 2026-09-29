@@ -1,0 +1,175 @@
+/* ════════════════════════════════════════════════════════════
+   Menu bar
+   ════════════════════════════════════════════════════════════ */
+.menuBar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10000;
+    display: flex;
+    align-items: stretch;
+    height: var(--menubar-h);
+    padding: 0 8px;
+    font-family: var(--font-chrome);
+    font-size: 15px;
+    line-height: 1;
+    background: linear-gradient(var(--platinum-hi), var(--platinum));
+    border-bottom: 1px solid var(--ink);
+    /* the rounded top corners of a classic Mac screen */
+    border-radius: 8px 8px 0 0;
+    user-select: none;
+}
+
+.menus {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+}
+
+.menu { position: relative; display: flex; }
+
+.menuTitle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 10px;
+    background: none;
+    border: 0;
+    cursor: default;
+    white-space: nowrap;
+}
+.menuTitle:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+}
+.menuTitleOpen {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.brand { font-weight: 700; }
+
+/* ── Dropdown ────────────────────────────────────────────── */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 230px;
+    padding: 4px 0;
+    background: var(--platinum);
+    border: 1px solid var(--ink);
+    box-shadow:
+        inset 1px 1px 0 var(--paper),
+        2px 2px 0 rgb(0 0 0 / 0.35);
+    z-index: 1;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 22px;
+    padding: 2px 16px 2px 0;
+    font-family: var(--font-chrome);
+    font-size: 15px;
+    line-height: 1.2;
+    text-align: left;
+    text-decoration: none;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    cursor: default;
+    white-space: nowrap;
+}
+.item:hover,
+.item:focus {
+    background: var(--accent);
+    color: var(--accent-text);
+    outline: none;
+}
+.item[aria-disabled="true"] {
+    color: var(--shade);
+    background: none;
+}
+
+.check {
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+}
+.itemLabel { flex: 1; }
+.hint {
+    margin-left: 24px;
+    font-family: var(--font-text);
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.separator {
+    height: 1px;
+    margin: 4px 1px;
+    background: var(--shade);
+    box-shadow: 0 1px 0 var(--paper);
+}
+
+/* ── Right side: language + clock ────────────────────────── */
+.extras {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+}
+
+.langToggle {
+    display: flex;
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.langToggle button {
+    padding: 1px 7px 2px;
+    font-family: var(--font-chrome);
+    font-size: 13px;
+    line-height: 1.2;
+    background: var(--platinum-hi);
+    border: 0;
+    cursor: pointer;
+}
+.langToggle button + button { border-left: 1px solid var(--ink); }
+.langToggle button[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.clock {
+    min-width: 5.5em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Compact screens ─────────────────────────────────────── */
+@media (max-width: 767px) {
+    .menuBar { border-radius: 0; padding: 0 4px; }
+    .compactHidden { display: none; }
+    .menuTitle { padding: 0 8px; }
+
+    /* Full-width menus: never off-screen, and easy to tap */
+    .dropdown {
+        position: fixed;
+        top: var(--menubar-h);
+        left: 0;
+        right: 0;
+        min-width: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+    .item { font-size: 17px; padding-right: 20px; }
+}
+
+@media (max-width: 479px) {
+    .clock { display: none; }
+}
+
+@media (pointer: coarse) {
+    .item { min-height: 40px; }
+    .langToggle button { padding: 4px 10px; }
+}

@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portfolio OS
 
-## Getting Started
+The portfolio of **Lasse Nothelfer**, application developer in training in Zurich, built as a working
+Mac OS 8–style desktop. Projects, skills, CV and a contact form live in draggable, resizable
+Platinum windows, in English and German.
 
-First, run the development server:
+Built from scratch with Next.js 16 and React 19 — plain CSS modules, no UI library.
+
+## Features
+
+- **Platinum window manager** — drag, resize (grow box), zoom and windowshade boxes, stacking,
+  Esc to close, keyboard focus handled on open/close. Windows grow out of their icon with the
+  classic "zoom rects" animation.
+- **Menu bar** — a real ARIA menubar: click or arrow keys to navigate, Esc to close. The Windows
+  menu doubles as the app switcher on phones.
+- **Pixel-art icons** drawn as 16×16 character maps (`app/components/icons/iconMaps.js`) and
+  rendered as crisp SVG, so they look the same on every OS. The favicon and link-preview image
+  use the same maps.
+- **Startup screen** on the first visit (replay it via the menu → *Restart…*). Skippable, and
+  skipped entirely for `prefers-reduced-motion`.
+- **English / German** — first visit follows the browser language; the choice is remembered.
+- **Phones** — one fullscreen window at a time, a touch-sized menu bar, and full-width menus.
+- **Appearance** control panel with classic desktop patterns.
+
+Preferences (language, desktop pattern, "startup screen seen") are stored in cookies so the
+server renders the right state on the very first paint.
+
+## Editing content
+
+| What | Where |
+| --- | --- |
+| Name, version date, GitHub / LinkedIn links | `app/config/site.js` |
+| Projects | `app/data/projects.js` |
+| Skills (levels, "used in" projects) | `app/data/skills.js` |
+| CV / education | `app/data/cv.js` |
+| Every interface string (EN + DE) | `app/i18n/strings.js` |
+| Window titles, icons, default sizes | `app/constants/windows.js` |
+
+Translatable fields are `{ en, de }` objects; plain strings are used as-is in both languages.
+The LinkedIn link stays hidden everywhere until `SITE.links.linkedin` is set.
+
+## Running locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. To see the startup screen again, use the menu → *Restart…*.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The contact form sends mail through [Resend](https://resend.com). Create `.env.local`:
 
-## Learn More
+```bash
+RESEND_API_KEY=re_...
+CONTACT_EMAIL=you@example.com
+# Optional: absolute URL of the deployed site, used for link-preview image URLs
+NEXT_PUBLIC_SITE_URL=https://your-domain.example
+```
 
-To learn more about Next.js, take a look at the following resources:
+The API route (`app/api/contact/route.js`) validates input server-side, rate-limits per IP and
+uses a honeypot field against bots.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploying
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The home page reads cookies and the contact form is an API route, so the site needs a Node
+server (Vercel, Render, Railway, Fly.io …) rather than a static export.
 
-## Deploy on Vercel
+```bash
+npm run build
+npm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+├── page.js, layout.js        entry; reads preferences from cookies
+├── globals.css               design tokens + shared Platinum controls
+├── components/
+│   ├── desktop/              screen, desktop icons
+│   ├── menubar/              menu bar, clock
+│   ├── window/               the Platinum window (drag, resize, zoom, windowshade)
+│   ├── windows/              About, Projects, Skills, CV, Contact, Appearance
+│   ├── boot/                 startup screen
+│   └── icons/                pixel-art maps + SVG renderer
+├── hooks/useWindowManager.js window state as a pure reducer
+├── context/                  preferences (language, wallpaper), desktop actions
+├── data/                     projects, skills, CV, wallpapers
+├── i18n/                     UI strings, translation helper
+├── lib/                      cookie-backed preferences
+└── api/contact/route.js      contact form endpoint
+```

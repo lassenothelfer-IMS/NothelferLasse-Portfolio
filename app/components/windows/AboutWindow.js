@@ -1,52 +1,64 @@
-import styles from './AboutWindow.module.css';
-import { useLanguage } from '../../context/LanguageContext';
+"use client";
+
+import PixelIcon from "../icons/PixelIcon";
+import { useStrings } from "../../context/PreferencesContext";
+import { useDesktop } from "../../context/DesktopContext";
+import { SITE, publicLinks } from "../../config/site";
+import styles from "./AboutWindow.module.css";
 
 export default function AboutWindow() {
-  const { language } = useLanguage();
+    const T = useStrings();
+    const { open } = useDesktop();
+    const A = T.about;
 
-  return (
-    <div className={styles.aboutWindow}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Lasse Nothelfer</h1>
-        <p className={styles.subtitle}>
-          {language === 'en' ? 'Aspiring Full-Stack Developer' : 'Angehender Full-Stack-Entwickler'}
-        </p>
-      </div>
+    const openFrom = (id) => (e) => open(id, { from: e.currentTarget.getBoundingClientRect() });
 
-      <div className={styles.systemInfo}>
-        <h3>{language === 'en' ? 'System Information' : 'Systeminformationen'}</h3>
-        <div className={styles.infoGrid}>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>OS:</span>
-            <span>Portfolio OS 1.0</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>{language === 'en' ? 'Version' : 'Version'}:</span>
-            <span>2024.07.18</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>{language === 'en' ? 'Processor' : 'Prozessor'}:</span>
-            <span>{language === 'en' ? 'Caffeine-Fueled' : 'Koffeingetrieben'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>{language === 'en' ? 'Memory' : 'Speicher'}:</span>
-            <span>16GB (8GB {language === 'en' ? 'for Chrome' : 'für Chrome'})</span>
-          </div>
+    return (
+        <div className={styles.about}>
+            <header className={styles.header}>
+                <div className={styles.portrait}>
+                    <PixelIcon name="person" size={64} />
+                </div>
+                <div>
+                    <h1 className={styles.name}>{SITE.name}</h1>
+                    <p className={styles.role}>{A.role}</p>
+                    <p className={styles.meta}>
+                        <span>{A.location}</span>
+                        <span className={styles.status}>
+                            <span className={styles.dot} aria-hidden="true" />
+                            {A.status}
+                        </span>
+                    </p>
+                </div>
+            </header>
+
+            <dl className={styles.facts}>
+                {A.facts.map((fact) => (
+                    <div key={fact.label} className={styles.fact}>
+                        <dt>{fact.label}</dt>
+                        <dd>{fact.value}</dd>
+                    </div>
+                ))}
+            </dl>
+
+            <div className={styles.bio}>
+                {A.bio.map((paragraph) => <p key={paragraph.slice(0, 24)}>{paragraph}</p>)}
+            </div>
+
+            <div className={styles.actions}>
+                <button type="button" className="btn btn-default" onClick={openFrom("projects")}>{A.projects}</button>
+                <button type="button" className="btn" onClick={openFrom("cv")}>{A.cv}</button>
+                <button type="button" className="btn" onClick={openFrom("contact")}>{A.contact}</button>
+                {publicLinks().map((link) => (
+                    <a key={link.id} className="btn" href={link.href} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                    </a>
+                ))}
+            </div>
+
+            <p className={styles.version}>
+                Portfolio OS · {A.version} {SITE.version}
+            </p>
         </div>
-      </div>
-
-      <div className={styles.personalInfo}>
-        <p>
-          {language === 'en' 
-            ? "Welcome to my digital desktop! I'm a passionate developer with a love for creating clean, efficient, and engaging applications."
-            : "Willkommen auf meinem digitalen Desktop! Ich bin ein leidenschaftlicher Entwickler mit einer Vorliebe für die Erstellung von sauberen, effizienten und interaktiven Anwendungen."}
-        </p>
-        <p>
-          {language === 'en'
-            ? "This portfolio is a playground for my ideas, showcasing my journey in web development. Feel free to explore the different windows to learn more about my skills, projects, and experiences."
-            : "Dieses Portfolio ist eine Spielwiese für meine Ideen und zeigt meine Reise in der Webentwicklung. Fühlen Sie sich frei, die verschiedenen Fenster zu erkunden, um mehr über meine Fähigkeiten, Projekte und Erfahrungen zu erfahren."}
-        </p>
-      </div>
-    </div>
-  );
+    );
 }

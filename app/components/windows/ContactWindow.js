@@ -1,153 +1,143 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
-import styles from './ContactWindow.module.css';
+import { useState } from "react";
+import PixelIcon from "../icons/PixelIcon";
+import { useStrings } from "../../context/PreferencesContext";
+import { publicLinks } from "../../config/site";
+import styles from "./ContactWindow.module.css";
+
+const EMPTY = { name: "", email: "", message: "", company: "" }; // company = honeypot
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validate(form) {
+    const errors = {};
+    if (!form.name.trim()) errors.name = "name";
+    if (!form.email.trim()) errors.email = "email";
+    else if (!EMAIL_RE.test(form.email.trim())) errors.email = "emailBad";
+    if (!form.message.trim()) errors.message = "message";
+    return errors;
+}
 
 export default function ContactWindow() {
-  const { language } = useLanguage();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-    company: '', // honeypot — must stay empty
-  });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+    const T = useStrings();
+    const C = T.contact;
+    const [form, setForm] = useState(EMPTY);
+    const [errors, setErrors] = useState({});
+    const [status, setStatus] = useState("idle"); // idle | sending | sent | tooMany | failed
 
-  const validate = () => {
-    let tempErrors = {};
-    if (language === 'en') {
-      if (!formData.name) tempErrors.name = "Name is required.";
-      if (!formData.email) {
-        tempErrors.email = "Email is required.";
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        tempErrors.email = "Email is invalid.";
-      }
-      if (!formData.message) tempErrors.message = "Message is required.";
-    } else {
-      if (!formData.name) tempErrors.name = "Name ist erforderlich.";
-      if (!formData.email) {
-        tempErrors.email = "E-Mail ist erforderlich.";
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        tempErrors.email = "E-Mail ist ungültig.";
-      }
-      if (!formData.message) tempErrors.message = "Nachricht ist erforderlich.";
-    }
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
+    const update = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+        if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitStatus(null);
-    if (validate()) {
-      setIsSubmitting(true);
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-          setSubmitStatus('success');
-          setFormData({ name: '', email: '', message: '', company: '' });
-        } else {
-          setSubmitStatus('error');
+    const submit = async (e) => {
+        e.preventDefault();
+        const found = validate(form);
+        setErrors(found);
+        if (Object.keys(found).length) {
+            e.currentTarget.querySelector(`[name="${Object.keys(found)[0]}"]`)?.focus();
+            return;
         }
-      } catch (error) {
-        setSubmitStatus('error');
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+        setStatus("sending");
+        try {
+            const res = await fetch("/api/contact", {
+                method:  "POST",
+                headers: { "Content-Type": "application/json" },
+                body:    JSON.stringify(form),
+            });
+            if (res.ok) {
+                setStatus("sent");
+                setForm(EMPTY);
+            } else {
+                setStatus(res.status === 429 ? "tooMany" : "failed");
+            }
+        } catch {
+            setStatus("failed");
+        }
+    };
 
-  return (
-    <div className={styles.contactWindow}>
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        {/* Honeypot: hidden from users, tempting to bots. Kept out of the
-            tab order and hidden from assistive tech. */}
-        <input
-          type="text"
-          name="company"
-          value={formData.company}
-          onChange={handleChange}
-          className={styles.honeypot}
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-        />
-        <div className={styles.formGroup}>
-          <label htmlFor="name" className={styles.label}>{language === 'en' ? 'Name' : 'Name'}</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            maxLength={100}
-            placeholder={language === 'en' ? "Your Name" : "Dein Name"}
-            value={formData.name}
-            onChange={handleChange}
-            className={styles.input}
-          />
-          {errors.name && <p className={styles.error}>{errors.name}</p>}
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.label}>{language === 'en' ? 'Email' : 'E-Mail'}</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            maxLength={254}
-            placeholder={language === 'en' ? "your.email@example.com" : "deine.email@beispiel.de"}
-            value={formData.email}
-            onChange={handleChange}
-            className={styles.input}
-          />
-          {errors.email && <p className={styles.error}>{errors.email}</p>}
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="message" className={styles.label}>{language === 'en' ? 'Message' : 'Nachricht'}</label>
-          <textarea
-            id="message"
-            name="message"
-            maxLength={5000}
-            placeholder={language === 'en' ? "How can I help you?" : "Wie kann ich dir helfen?"}
-            value={formData.message}
-            onChange={handleChange}
-            className={styles.textarea}
-          />
-          {errors.message && <p className={styles.error}>{errors.message}</p>}
-        </div>
-        
-        {submitStatus === 'success' && (
-          <p className={styles.successText}>
-            {language === 'en' ? 'Message sent successfully!' : 'Nachricht erfolgreich gesendet!'}
-          </p>
-        )}
-        {submitStatus === 'error' && (
-          <p className={styles.error}>
-            {language === 'en' ? 'Error sending message. Please try again.' : 'Fehler beim Senden. Bitte versuche es erneut.'}
-          </p>
-        )}
+    const field = (name) => ({
+        id:                 `contact-${name}`,
+        name,
+        value:              form[name],
+        onChange:           update,
+        className:          "field",
+        "aria-invalid":     errors[name] ? true : undefined,
+        "aria-describedby": errors[name] ? `contact-${name}-error` : undefined,
+    });
 
-        <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-          {isSubmitting 
-            ? (language === 'en' ? 'Sending...' : 'Senden...') 
-            : (language === 'en' ? 'Send Message' : 'Nachricht senden')}
-        </button>
-      </form>
-    </div>
-  );
+    const errorFor = (name) =>
+        errors[name] && (
+            <p id={`contact-${name}-error`} className={styles.fieldError}>{C.errors[errors[name]]}</p>
+        );
+
+    const links = publicLinks();
+
+    return (
+        <div className={styles.contact}>
+            <p className={styles.intro}>{C.intro}</p>
+
+            <form className={styles.form} onSubmit={submit} noValidate>
+                {/* Honeypot: invisible to people, tempting to bots */}
+                <input
+                    type="text"
+                    name="company"
+                    value={form.company}
+                    onChange={update}
+                    className={styles.honeypot}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                />
+
+                <div className={styles.row}>
+                    <label htmlFor="contact-name" className={styles.label}>{C.name}</label>
+                    <input {...field("name")} type="text" autoComplete="name" maxLength={100} placeholder={C.namePh} />
+                    {errorFor("name")}
+                </div>
+
+                <div className={styles.row}>
+                    <label htmlFor="contact-email" className={styles.label}>{C.email}</label>
+                    <input {...field("email")} type="email" autoComplete="email" maxLength={254} placeholder={C.emailPh} />
+                    {errorFor("email")}
+                </div>
+
+                <div className={styles.row}>
+                    <label htmlFor="contact-message" className={styles.label}>{C.message}</label>
+                    <textarea {...field("message")} rows={6} maxLength={5000} placeholder={C.messagePh} />
+                    {errorFor("message")}
+                </div>
+
+                <div className={styles.submitRow}>
+                    <p className={styles.status} role="status" aria-live="polite">
+                        {status === "sent" && (
+                            <><PixelIcon name="check" size={16} /><span className={styles.ok}>{C.success}</span></>
+                        )}
+                        {(status === "tooMany" || status === "failed") && (
+                            <><PixelIcon name="caution" size={16} /><span className={styles.bad}>{C.errors[status]}</span></>
+                        )}
+                    </p>
+                    <button type="submit" className="btn btn-default" disabled={status === "sending"}>
+                        {status === "sending" ? C.sending : C.send}
+                    </button>
+                </div>
+            </form>
+
+            {links.length > 0 && (
+                <fieldset className={`group ${styles.elsewhere}`}>
+                    <legend>{C.elsewhere}</legend>
+                    <div className={styles.links}>
+                        {links.map((link) => (
+                            <a key={link.id} className="btn" href={link.href} target="_blank" rel="noopener noreferrer">
+                                <PixelIcon name="globe" size={16} />
+                                {link.label}
+                            </a>
+                        ))}
+                    </div>
+                </fieldset>
+            )}
+        </div>
+    );
 }

@@ -1,77 +1,107 @@
-.cvWindow {
-  padding: 1rem;
-  font-family: 'Chicago', sans-serif;
+.cv {
+    padding: 22px 24px 24px;
 }
 
+.section {
+    padding-bottom: 4px;
+    margin-bottom: 18px;
+    font-family: var(--font-chrome);
+    font-size: 17px;
+    border-bottom: 1px solid var(--ink);
+}
+
+/* ── Timeline: years column, then a rule with square markers ── */
 .timeline {
-  position: relative;
-  list-style: none;
-  padding: 1rem 0;
-  margin: 0;
+    position: relative;
 }
 
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20px;
-  height: 100%;
-  width: 2px;
-  background: #000;
+.entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 22px;
+    padding-bottom: 22px;
 }
 
-.timelineItem {
-  margin-bottom: 2rem;
-  position: relative;
-  padding-left: 40px;
+/* vertical rule */
+.entry::before {
+    content: "";
+    position: absolute;
+    left: calc(7.5rem + 10px);
+    top: 8px;
+    bottom: -8px;
+    border-left: 1px dotted var(--shade);
+}
+.entry:last-child::before { display: none; }
+
+/* square marker */
+.entry::after {
+    content: "";
+    position: absolute;
+    left: calc(7.5rem + 6px);
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    box-shadow: 1px 1px 0 var(--shade);
+}
+.entry:first-child::after { background: var(--accent); }
+
+.years {
+    padding-top: 1px;
+    font-family: var(--font-code);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: right;
+    white-space: nowrap;
 }
 
-.timelineDot {
-  position: absolute;
-  left: 13px;
-  top: 5px;
-  width: 16px;
-  height: 16px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 50%;
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
 }
 
-.timelineYear {
-  font-weight: bold;
-  margin-bottom: 0.25rem;
+.institution {
+    font-size: 14px;
+    color: var(--text-muted);
 }
 
-.timelineTitle {
-  font-weight: bold;
-  font-size: 1.1rem;
+.description {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+    text-wrap: pretty;
 }
 
-.timelineInstitution {
-  font-style: italic;
-  color: #555;
-  margin-bottom: 0.5rem;
+/* ── Footer ──────────────────────────────────────────────── */
+.more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    margin-top: 6px;
+    padding-top: 16px;
+    border-top: 1px dotted var(--shade);
+    font-size: 14px;
+    color: var(--text-muted);
 }
 
-.timelineDescription {
-  line-height: 1.4;
+.moreActions {
+    display: flex;
+    gap: 10px;
 }
 
-.downloadButton {
-  display: inline-block;
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #000;
-  color: #fff;
-  text-decoration: none;
-  border: 2px solid #000;
-  font-family: 'Chicago', sans-serif;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+@media (max-width: 479px) {
+    .cv { padding: 18px 16px; }
+    .entry {
+        grid-template-columns: 1fr;
+        gap: 2px;
+        padding-left: 22px;
+    }
+    .entry::before { left: 4px; }
+    .entry::after  { left: 0; }
+    .years { text-align: left; }
 }
-
-.downloadButton:hover {
-  background-color: #fff;
-  color: #000;
-}
-

@@ -1,70 +1,70 @@
-// Single source of truth for every desktop icon → window mapping.
+// Every window on the desktop: its title, desktop icon and default frame.
 //
-// `label` (desktop icon + taskbar text) and `title` (window title bar) are
-// stored per-language. Resolve them with the `t()` helper below so there is
-// exactly ONE place that defines window names.
+// variant:  "document" — white page (reading content)
+//           "panel"    — platinum surface (forms, control panels)
+// rect:     default position/size on a ~1280×800 screen; clamped to the
+//           viewport when the window opens.
 export const WINDOW_CONFIGS = [
-  {
-    id:              "about",
-    title:           { en: "About.txt", de: "Ich.txt" },
-    icon:            "👤",
-    label:           { en: "About", de: "Ich" },
-    defaultPosition: { x: 80,  y: 55  },
-    defaultSize:     { width: 740, height: 480 },
-    colorBar:        false,
-  },
-  {
-    id:              "projects",
-    title:           { en: "Projects/", de: "Projekte/" },
-    icon:            "📁",
-    label:           { en: "Projects", de: "Projekte" },
-    defaultPosition: { x: 150, y: 80  },
-    defaultSize:     { width: 780, height: 560 },
-    colorBar:        false,
-  },
-  {
-    id:              "skills",
-    title:           { en: "Skills.dat", de: "Fähigkeiten.dat" },
-    icon:            "⚙️",
-    label:           { en: "Skills", de: "Fähigkeiten" },
-    defaultPosition: { x: 200, y: 70  },
-    defaultSize:     { width: 720, height: 520 },
-    colorBar:        false,
-  },
-  {
-    id:              "cv",
-    title:           { en: "CV.doc", de: "Lebenslauf.doc" },
-    icon:            "📄",
-    label:           { en: "CV", de: "Lebenslauf" },
-    defaultPosition: { x: 260, y: 90  },
-    defaultSize:     { width: 660, height: 540 },
-    colorBar:        false,
-  },
-  {
-    id:              "contact",
-    title:           { en: "Contact.form", de: "Kontakt.form" },
-    icon:            "✉️",
-    label:           { en: "Contact", de: "Kontakt" },
-    defaultPosition: { x: 310, y: 85  },
-    defaultSize:     { width: 580, height: 520 },
-    colorBar:        true,
-  },
-  {
-    id:              "settings",
-    title:           { en: "Settings.exe", de: "Einstellungen.exe" },
-    icon:            "🖥️",
-    label:           { en: "Settings", de: "Einstellungen" },
-    defaultPosition: { x: 360, y: 100 },
-    defaultSize:     { width: 400, height: 300 },
-    colorBar:        false,
-  },
+    {
+        id:      "about",
+        title:   { en: "About Lasse", de: "Über Lasse" },
+        label:   { en: "About Me", de: "Über mich" },
+        icon:    "person",
+        variant: "document",
+        rect:    { x: 48,  y: 44,  w: 580, h: 590 },
+        min:     { w: 340, h: 260 },
+    },
+    {
+        id:      "projects",
+        title:   { en: "Projects", de: "Projekte" },
+        label:   { en: "Projects", de: "Projekte" },
+        icon:    "folder",
+        variant: "document",
+        rect:    { x: 120, y: 70,  w: 740, h: 480 },
+        min:     { w: 360, h: 280 },
+    },
+    {
+        id:      "skills",
+        title:   { en: "Skills", de: "Fähigkeiten" },
+        label:   { en: "Skills", de: "Fähigkeiten" },
+        icon:    "toolbox",
+        variant: "document",
+        rect:    { x: 180, y: 92,  w: 560, h: 610 },
+        min:     { w: 340, h: 260 },
+    },
+    {
+        id:      "cv",
+        title:   { en: "Curriculum Vitae", de: "Lebenslauf" },
+        label:   { en: "CV", de: "Lebenslauf" },
+        icon:    "document",
+        variant: "document",
+        rect:    { x: 240, y: 60,  w: 580, h: 560 },
+        min:     { w: 340, h: 260 },
+    },
+    {
+        id:      "contact",
+        title:   { en: "Contact", de: "Kontakt" },
+        label:   { en: "Contact", de: "Kontakt" },
+        icon:    "envelope",
+        variant: "panel",
+        rect:    { x: 300, y: 84,  w: 480, h: 580 },
+        min:     { w: 320, h: 320 },
+    },
+    {
+        id:      "appearance",
+        title:   { en: "Appearance", de: "Erscheinungsbild" },
+        label:   { en: "Appearance", de: "Erscheinungsbild" },
+        icon:    "monitor",
+        variant: "panel",
+        rect:    { x: 360, y: 108, w: 470, h: 480 },
+        min:     { w: 320, h: 280 },
+    },
 ];
 
-/**
- * Resolve a per-language field to a string.
- * Accepts either a { en, de } object or a plain string (defensive fallback).
- */
-export function t(field, language) {
-  if (field && typeof field === "object") return field[language] ?? field.en;
-  return field;
-}
+export const CONFIG_BY_ID = Object.fromEntries(WINDOW_CONFIGS.map((cfg) => [cfg.id, cfg]));
+
+/** Windows open on a fresh start (and after "Restart…"). */
+export const STARTUP_WINDOWS = ["about"];
+
+/** Height of the menu bar in px — keep in sync with --menubar-h in globals.css. */
+export const MENUBAR_H = 24;
