@@ -25,8 +25,8 @@ export const skillGroups = [
         id:    "web",
         title: { en: "Web", de: "Web" },
         skills: [
-            { name: { en: "Web Development (HTML, CSS, JS)", de: "Webentwicklung (HTML, CSS, JS)" }, level: 70, usedIn: ["betquiz", "portfolio"] },
-            { name: "React",                                                                          level: 55, usedIn: ["betquiz", "portfolio"] },
+            { name: { en: "Web Development (HTML, CSS, JS)", de: "Webentwicklung (HTML, CSS, JS)" }, level: 70, usedIn: ["shrike", "rigscout", "betquiz", "portfolio"] },
+            { name: "React",                                                                          level: 55, usedIn: ["rigscout", "betquiz", "portfolio"] },
         ],
     },
     {

@@ -20,6 +20,7 @@ export const PALETTE = {
     Y: "#f3d63b", // yellow
     P: "#8f5cc8", // purple
     c: "#6c72b9", // screen (default wallpaper)
+    T: "#c8955a", // light wood
 };
 
 export const ICONS = {
@@ -219,6 +220,42 @@ export const ICONS = {
         ".kwkkkkkkkkkkkk.",
         ".kwwwwwwwwwwwwk.",
         ".kkkkkkkkkkkkkk.",
+        "................",
+    ],
+    bow: [
+        "................",
+        "...hh...........",
+        "...ghh..........",
+        "...g.hh.........",
+        "...g..hh........",
+        "...g...hh.......",
+        "...g.RR.hh...k..",
+        "...gTTTTTTTTTmmk",
+        "...g.RR.hh...k..",
+        "...g...hh.......",
+        "...g..hh........",
+        "...g.hh.........",
+        "...ghh..........",
+        "...hh...........",
+        "................",
+        "................",
+    ],
+    rigscout: [
+        "................",
+        ".kkkkkkk........",
+        ".kgggggk........",
+        ".kgkkkgk........",
+        ".kgggggk........",
+        ".kgkkkgk........",
+        ".kgggggk........",
+        ".kgggggk..kkk...",
+        ".kggGggk.kBBBk..",
+        ".kgggggkkBwBBBk.",
+        ".kgggggkkBBBBBk.",
+        ".kgggggkkBBBBBk.",
+        ".kkkkkkk.kBBBk..",
+        "..........kkkh..",
+        "..............hh",
         "................",
     ],
     check: [
